@@ -17,3 +17,16 @@ Entregar uma visão analítica completa sobre:
 ---
 
 ## 📂 Estrutura do projeto
+
+###📦 requirements.txt
+🧠 Por que cada biblioteca?
+Biblioteca	Motivo
+streamlit	app principal do dashboard
+pandas	manipulação de dados
+pyarrow	leitura de parquet com performance
+plotly	gráficos modernos e interativos
+matplotlib	gráfico simples (SLA, barras) se quiser
+numpy	base matemática para KPIs
+python-dateutil	manipulação flexível de datas / períodos
+
+
