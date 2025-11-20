@@ -1,22 +1,32 @@
+import sys
+from pathlib import Path
+
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-from src.skillmind_dashboard.data_loader import load_base
-from src.skillmind_dashboard.ui import render_sidebar
+# Garantir que a pasta src/ esteja no PYTHONPATH
+ROOT_DIR = Path(__file__).resolve().parents[1]
+SRC_DIR = ROOT_DIR / "src"
+if str(SRC_DIR) not in sys.path:
+    sys.path.append(str(SRC_DIR))
+
+from skillmind_dashboard.data_loader import load_base
+from skillmind_dashboard.ui import render_sidebar
+
 
 st.title("📊 Visão Geral dos Chamados")
 
 # Sidebar + filtros
 filters = render_sidebar()
-
 df = load_base()
 
-# ============================
 # Aplicar filtros
-# ============================
-
-if "Data de abertura" in df.columns and filters.get("date_range"):
+if (
+    "Data de abertura" in df.columns
+    and filters.get("date_range")
+    and len(filters["date_range"]) == 2
+):
     inicio, fim = filters["date_range"]
     inicio = pd.to_datetime(inicio)
     fim = pd.to_datetime(fim)
@@ -29,7 +39,7 @@ if "Rota_SkillMind" in df.columns and filters.get("rota"):
     df = df[df["Rota_SkillMind"].isin(filters["rota"])]
 
 # ============================
-# Conteúdo
+# Chamados por mês
 # ============================
 
 st.markdown("### 📅 Chamados por mês")
@@ -45,21 +55,22 @@ if "Data de abertura" in df.columns:
         title="Volume de Chamados por Mês",
     )
     st.plotly_chart(fig, use_container_width=True)
-
 else:
     st.warning("Coluna 'Data de abertura' não encontrada.")
 
-st.markdown("### 🧩 Distribuição por Categoria")
-if "Categoria" in df.columns:
-    categoria = df["Categoria"].value_counts().reset_index()
-    categoria.columns = ["Categoria", "Total"]
+# ============================
+# Chamados por Entidade
+# ============================
+
+if "Entidade" in df.columns:
+    st.markdown("### 🏢 Chamados por Entidade")
+    ent = df["Entidade"].value_counts().reset_index()
+    ent.columns = ["Entidade", "Total"]
 
     fig2 = px.bar(
-        categoria,
-        x="Categoria",
+        ent.head(15),
+        x="Entidade",
         y="Total",
-        title="Chamados por Categoria",
+        title="Top Entidades por quantidade de chamados",
     )
     st.plotly_chart(fig2, use_container_width=True)
-else:
-    st.warning("Coluna 'Categoria' não encontrada.")
