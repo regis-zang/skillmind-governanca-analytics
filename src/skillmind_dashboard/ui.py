@@ -1,6 +1,6 @@
 import streamlit as st
-#from src.skillmind_dashboard.data_loader import load_base
 from .data_loader import load_base
+
 
 def render_sidebar():
     st.sidebar.markdown(
@@ -22,7 +22,6 @@ def render_sidebar():
     if "Data de abertura" in df.columns:
         min_date = df["Data de abertura"].min()
         max_date = df["Data de abertura"].max()
-
         date_range = st.sidebar.date_input(
             "Período",
             value=(min_date, max_date)
@@ -31,27 +30,28 @@ def render_sidebar():
         date_range = None
 
     # Categoria
-    categoria = None
     if "Categoria" in df.columns:
         categoria = st.sidebar.multiselect(
             "Categoria",
             sorted(df["Categoria"].dropna().unique())
         )
+    else:
+        categoria = None
 
-    # Rota
-    rota = None
+    # Rota SkillMind
     if "Rota_SkillMind" in df.columns:
         rota = st.sidebar.multiselect(
             "Rota SkillMind",
             sorted(df["Rota_SkillMind"].dropna().unique())
         )
+    else:
+        rota = None
 
     st.sidebar.markdown("<hr>", unsafe_allow_html=True)
     st.sidebar.caption("Versão 0.1.0 • FIAP • SkillMind Engine")
 
-    # Retornar filtros para as páginas
     return {
         "date_range": date_range,
         "categoria": categoria,
-        "rota": rota
+        "rota": rota,
     }
