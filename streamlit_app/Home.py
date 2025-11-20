@@ -1,8 +1,20 @@
+import sys
+from pathlib import Path
+
 import streamlit as st
 import pandas as pd
 
-from src.skillmind_dashboard.data_loader import load_base
-from src.skillmind_dashboard.ui import render_sidebar
+# ============================
+# Garantir que a pasta src/ esteja no PYTHONPATH
+# ============================
+ROOT_DIR = Path(__file__).resolve().parents[1]  # raiz do repo
+SRC_DIR = ROOT_DIR / "src"
+
+if str(SRC_DIR) not in sys.path:
+    sys.path.append(str(SRC_DIR))
+
+from skillmind_dashboard.data_loader import load_base  # agora sem "src."
+from skillmind_dashboard.ui import render_sidebar
 
 
 # Configuração da página
