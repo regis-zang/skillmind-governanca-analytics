@@ -1,5 +1,6 @@
 import streamlit as st
-from src.skillmind_dashboard.data_loader import load_base
+#from src.skillmind_dashboard.data_loader import load_base
+from .data_loader import load_base
 
 def render_sidebar():
     st.sidebar.markdown(
